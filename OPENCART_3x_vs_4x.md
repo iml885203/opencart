@@ -20,6 +20,20 @@
 - 沒有 fallback 機制
 - 新功能 = 語系檔 × 語言數
 
+### 資料庫
+| 問題 | 影響 |
+|------|------|
+| 沒有 ORM | 手動拼 SQL 字串，易出錯 |
+| 沒有 Migration | Schema 變更無版本控制 |
+| MyISAM 引擎 | 不支援 Transaction / Foreign Key |
+| 大量子查詢 | 單一 SQL 過度複雜，效能差 |
+
+**風險：**
+- **SQL Injection**：依賴 `$this->db->escape()` 手動跳脫，漏寫就有漏洞
+- **資料不一致**：MyISAM 無 Transaction，寫入中斷會造成髒資料
+- **難以重構**：沒有 Migration，多環境部署 Schema 難同步
+- **效能瓶頸**：Raw SQL 沒有快取機制，N+1 查詢問題常見
+
 ---
 
 ## 4.x 改進
